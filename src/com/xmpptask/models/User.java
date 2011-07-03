@@ -6,9 +6,11 @@ import java.security.NoSuchAlgorithmException;
 import java.security.Provider;
 import java.security.SecureRandom;
 import java.security.Security;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.jdo.annotations.*;
+import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable(identityType=IdentityType.APPLICATION)
 public class User {
@@ -21,6 +23,7 @@ public class User {
 	private Key key;
 	
 	@Persistent
+	@Unique
 	private String email;
 	
 	@Persistent
@@ -49,21 +52,34 @@ public class User {
 		}
 	}
 	
-	public void setPassword(String password){
+	private String doHashing(String password){
 		try{
 			String hash = User.PEPPER;
 			Provider[] providers = Security.getProviders();
-			MessageDigest digest = MessageDigest.getInstance("SHA512");
+			Set<String> algos = Security.getAlgorithms("MessageDigest");
+			MessageDigest digest = MessageDigest.getInstance("SHA-512");
 			
 			for(int i = 0; i < User.STRETCHES; i++){
 				String round = salt + hash + password + User.PEPPER;
 				hash = new String(digest.digest(round.getBytes("utf8")), "utf8");
 			}
+			
+			return hash;
 		}catch(UnsupportedEncodingException e){
 			log.severe("UTF8 is unavailable");
 		} catch (NoSuchAlgorithmException e) {
 			log.severe("SHA512 is unavailable");
 		}
+
+		return null;
+	}
+	
+	public void setPassword(String password){
+		this.password = doHashing(password);
+	}
+	
+	public boolean authenticate(String password){
+		return this.password.equals(doHashing(password));
 	}
 	
 	public Key getKey() {

@@ -3,8 +3,8 @@ package com.xmpptask.commands;
 public class List extends Command {
 
 	@Override
-	public void execute() {
-		
+	public CommandResult execute() {
+		return new CommandResult("", "");
 	}
 
 	

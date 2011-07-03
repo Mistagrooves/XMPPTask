@@ -1,11 +1,13 @@
 package com.xmpptask.web;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.Query;
 import javax.servlet.http.*;
 
 import com.google.appengine.api.xmpp.JID;
@@ -16,7 +18,12 @@ import com.google.appengine.api.xmpp.Presence;
 import com.google.appengine.api.xmpp.SendResponse;
 import com.google.appengine.api.xmpp.XMPPService;
 import com.google.appengine.api.xmpp.XMPPServiceFactory;
+import com.xmpptask.commands.Command;
+import com.xmpptask.commands.CommandResult;
 import com.xmpptask.models.PMF;
+import com.xmpptask.models.User;
+import com.xmpptask.parser.ParseException;
+import com.xmpptask.parser.XMPPParser;
 
 @SuppressWarnings("serial")
 //simple echo client for now
@@ -69,51 +76,66 @@ public class XMPPTaskServlet extends HttpServlet {
 		//TODO look up user in memcached
 		
 		//look up user in datastore
-		
 		PersistenceManager pm = PMF.get().getPersistenceManager();
+		User u = null;
+		Query query = pm.newQuery(User.class);
+		query.setFilter("email == emailParam");
+		query.declareParameters("String emailParam");
+		boolean auth = false;
 		try{
-			
+			List<User> results = (List<User>) query.execute(userid);
+			if(results.isEmpty()){
+				u = new User(userid, "", "");
+				u.setPassword("123456");
+				pm.makePersistent(u);
+			}else{
+				u = results.get(0);
+			}
 		}finally{
 			pm.close();
 		}
 		
 		//process message
+		Command cmd = null;
+		CommandResult result = null;
+		try{
+			XMPPParser parser = new XMPPParser(message.getBody());
+			cmd = parser.parse();
+			//execute command
+			result = cmd.execute();
+		}catch(ParseException e){
+			result = new CommandResult("Error " + e.getMessage(), "<span style='color:red;'>Error:</span> " + e.getMessage());
+		}
 		
-		//execute command
-		String result = "<body></body>"
-			+ "<html xmlns='http://jabber.org/protocol/xhtml-im'>"
-				+ "<body xmlns='http://www.w3.org/1999/xhtml'>"
-					+ "<b>BOLD TEXT</b>"
-				+ "</body>"
-			+ "</html>";
+		//construct response
+		StringBuilder sb = new StringBuilder();
+		sb.append("<body>");
+		sb.append(result.getPlainText());
+		sb.append("</body>");
+		sb.append("<html xmlns='http://jabber.org/protocol/xhtml-im'>");
+		sb.append("<body xmlns='http://www.w3.org/1999/xhtml'>");
+		sb.append(result.getHTML());
+		sb.append("</body>");
+		sb.append("</html>");
+		
 		//return result
-		
 		Presence presence = xmppService.getPresence(fromId);
 		
 		Message msg = new MessageBuilder()
-			.withBody(result)
+			.withBody(sb.toString())
 			.withRecipientJids(fromId)
 			.asXml(true)
 			.withMessageType(MessageType.CHAT)
 			.build();
 		
 		SendResponse response = xmppService.sendMessage(msg);
-				
-		//Presence presence = xmppService.getPresence(fromId);
-		//String presenceString = presence.isAvailable() ? "" : "not";
-		//SendResponse response = xmppService.sendMessage(
-        /*new MessageBuilder()
-        	.withBody(message.getBody() + " (you are " + presenceString + "available)")
-        	.withRecipientJids(fromId)
-        	.build());*/
-
 		
-	    for (Map.Entry<JID, SendResponse.Status> entry :
+	    /*for (Map.Entry<JID, SendResponse.Status> entry :
 	        response.getStatusMap().entrySet()) {
 	      resp.getWriter().println(entry.getKey() + "," + entry.getValue() + "<br>");
 	    }
 
-	    resp.getWriter().println("processed");
+	    resp.getWriter().println("processed");*/
 		
 	}
 }

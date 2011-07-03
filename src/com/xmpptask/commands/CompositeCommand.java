@@ -18,8 +18,15 @@ public class CompositeCommand extends Command {
 	}
 	
 	@Override
-	public void execute() {
-
+	public CommandResult execute() {
+		
+		CommandResult cr = new CommandResult("", ""); 
+		//aggregate all the results
+		for(Command c : commands){
+			cr.append(c.execute());
+		}
+		
+		return cr;
 	}
 	
 	public CompositeCommand(java.util.List<Command> commands){

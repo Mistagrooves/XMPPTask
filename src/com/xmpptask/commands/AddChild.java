@@ -2,7 +2,7 @@ package com.xmpptask.commands;
 
 public class AddChild extends Command {
 
-	public void execute(){
-		
+	public CommandResult execute(){
+		return new CommandResult("", "");
 	}
 }
