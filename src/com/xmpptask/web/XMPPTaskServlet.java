@@ -28,7 +28,7 @@ public class XMPPTaskServlet extends HttpServlet {
 	
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		
-		log.info(String.format("Received POST Message: From: %s\n To: %s\n Body: %s\n", req.getParameter("from"),
+		log.info(String.format("Received GET Message: From: %s\n To: %s\n Body: %s\n", req.getParameter("from"),
 				req.getParameter("to"), req.getParameter("body")));
 		
 		String body = req.getParameter("body");
@@ -65,6 +65,7 @@ public class XMPPTaskServlet extends HttpServlet {
         	.withRecipientJids(fromId)
         	.build());
 
+		
 	    for (Map.Entry<JID, SendResponse.Status> entry :
 	        response.getStatusMap().entrySet()) {
 	      resp.getWriter().println(entry.getKey() + "," + entry.getValue() + "<br>");
