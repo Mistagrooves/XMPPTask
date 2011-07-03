@@ -165,23 +165,23 @@ public class XMPPParser {
 
 		Pattern tags = Pattern.compile("#([^ ]+)");
 		Matcher match = tags.matcher(taskStr);
-		while(match.matches()){
+		while(match.find()){
 			parsed.tag(match.group());
-			match.region(match.end(), task.length());
+			match.region(match.end(), taskStr.length());
 		}
 		
 		Pattern prereq = Pattern.compile("@([^ ]+)");
 		match = prereq.matcher(taskStr);
-		while(match.matches()){
+		while(match.find()){
 			parsed.prereq(match.group());
-			match.region(match.end(), task.length());
+			match.region(match.end(), taskStr.length());
 		}
 		
 		Pattern date = Pattern.compile("=([^ ]+)");
 		match = prereq.matcher(taskStr);
-		while(match.matches()){
+		while(match.find()){
 			parsed.date(match.group());
-			match.region(match.end(), task.length());
+			match.region(match.end(), taskStr.length());
 		}
 		
 		
