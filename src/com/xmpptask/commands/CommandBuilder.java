@@ -1,6 +1,8 @@
 package com.xmpptask.commands;
 
 import com.xmpptask.models.Id;
+import com.xmpptask.models.Subject;
+import com.xmpptask.models.Tag;
 
 import net.sf.jsr107cache.*;
 
@@ -42,6 +44,29 @@ public class CommandBuilder {
 		return new CompositeCommand(subcommands);
 	}
 	
+	public CommandBuilder list(){
+		return this;
+	}
+	
+	public CommandBuilder subject(Id task){
+		return this;
+	}
+	
+	public CommandBuilder subject(Tag tag){
+		return this;
+	}
+	
+	public CommandBuilder subjects(Id[] ids){
+		return this;
+	}
+	
+	public CommandBuilder subjects(Tag[] tags){
+		return this;
+	}
+	
+	public CommandBuilder subjects(java.util.List<Subject> subjects){
+		return this;
+	}
 	/**
 	 * add a task to the global scope
 	 * 
@@ -71,6 +96,21 @@ public class CommandBuilder {
 		return this;
 	}
 	
+	public CommandBuilder complete(){
+		return this;
+	}
+	
+	public CommandBuilder tag(String tag){
+		return this;
+	}
+	
+	public CommandBuilder prereq(String prereq){
+		return this;
+	}
+	
+	public CommandBuilder date(String date){
+		return this;
+	}
 	/**
 	 * constructs a task via the task string
 	 * 
