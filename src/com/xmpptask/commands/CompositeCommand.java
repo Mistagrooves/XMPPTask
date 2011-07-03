@@ -1,5 +1,7 @@
 package com.xmpptask.commands;
 
+import java.util.ArrayList;
+
 /**
  * 
  * Command that executes multiple sub commands
@@ -9,17 +11,31 @@ package com.xmpptask.commands;
  */
 public class CompositeCommand extends Command {
 
+	java.util.List<Command> commands;
+	
+	public CompositeCommand(){
+		commands = new ArrayList<Command>();
+	}
+	
 	@Override
 	public void execute() {
 
 	}
 	
-	public CompositeCommand(){
+	public CompositeCommand(java.util.List<Command> commands){
 		
 	}
 	
-	public CompositeCommand(java.util.List<Command> commands){
-		
+	public int getCount(){
+		return commands.size();
+	}
+
+	public void add(Command cmd){
+		commands.add(cmd);
+	}
+	
+	public java.util.List<Command> getCommands(){
+		return commands;
 	}
 
 }

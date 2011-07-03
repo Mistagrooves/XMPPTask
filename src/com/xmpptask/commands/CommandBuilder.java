@@ -14,13 +14,13 @@ import net.sf.jsr107cache.*;
  */
 public class CommandBuilder {
 	
-	private java.util.List<Command> subcommands;
+	private CompositeCommand commands;
 	
 	/** 
 	 * constructs a blank command builder
 	 */
 	public CommandBuilder(){
-		
+		commands = new CompositeCommand();
 	}
 	
 	/**
@@ -41,10 +41,12 @@ public class CommandBuilder {
 	 */
 	public Command build(){
 		
-		return new CompositeCommand(subcommands);
+		return commands;
 	}
 	
 	public CommandBuilder list(){
+		
+		commands.add(new List());
 		return this;
 	}
 	
@@ -73,6 +75,7 @@ public class CommandBuilder {
 	 * @return
 	 */
 	public CommandBuilder add(){
+		commands.add(new AddTask());
 		return this;
 	}
 	

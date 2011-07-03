@@ -38,6 +38,16 @@ public class XMPPParser {
 		this.parsed = new CommandBuilder();
 	}
 	
+	public XMPPParser(){
+		this.task = "";
+		this.index = 0;
+		this.parsed = new CommandBuilder();
+	}
+	
+	public void setTask(String task){
+		this.task = task;
+	}
+	
 	/**
 	 * 
 	 * @param task
@@ -51,7 +61,7 @@ public class XMPPParser {
 		
 		parseStepOne();
 		
-		return new CommandBuilder().build();
+		return parsed.build();
 	}
 
 	
@@ -70,27 +80,41 @@ public class XMPPParser {
 		}
 	}
 	
+	private String getToken(){
+		int spaceIndex = task.indexOf(' ');
+
+		if(spaceIndex == -1){
+			//if we can't find a space then use the entire string
+			index = task.length();
+			return task;
+		}else{
+			//grab the first chunk, move the index forward.
+			String chunk = task.substring(index, spaceIndex);
+			index = spaceIndex + 1;
+			return chunk;
+		}
+	}
+	
 	private void parseStepOne() throws ParseException{
 		
-		char look = Character.toLowerCase(task.charAt(index));
-		int spaceIndex = task.indexOf(' ');
+		
+		String chunk = getToken();
+		char look = Character.toLowerCase(chunk.charAt(0));
 		//can be a/add/+
-		if(look == 'a' || look == '+'){
+		if(chunk.equalsIgnoreCase("a") || chunk.equals("+") || chunk.equalsIgnoreCase("add")){
 			//add a task to the global parent
 			parsed.add();
-			index = spaceIndex == -1 ? task.length() : spaceIndex + 1;
 			consumeTask();
 		//can be l/list
-		}else if(look == 'l'){
+		}else if(chunk.equalsIgnoreCase("l") || chunk.equalsIgnoreCase("list")){
 			//perform the list command
 			parsed.list();
-			index = spaceIndex == -1 ? task.length() : spaceIndex + 1;
 		//complete tasks
-		}else if(look == '!'){
+		}else if(chunk.equals("!")){
 			parsed.complete()
 				.subjects(consumeMultiple());
 		//delete task
-		}else if(look == '-' || look == 'd'){
+		}else if(chunk.equals("-") || chunk.equalsIgnoreCase("d") || chunk.equalsIgnoreCase("delete")){
 			parsed.delete()
 				.subjects(consumeMultiple());
 		//increase priority

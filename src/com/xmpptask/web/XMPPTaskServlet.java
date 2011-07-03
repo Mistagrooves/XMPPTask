@@ -1,6 +1,7 @@
 package com.xmpptask.web;
 import java.io.IOException;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.servlet.http.*;
 
@@ -17,6 +18,7 @@ import com.google.appengine.api.xmpp.XMPPServiceFactory;
 //simple echo client for now
 public class XMPPTaskServlet extends HttpServlet {
 	
+	private static final Logger log = Logger.getLogger(XMPPTaskServlet.class.getName()); 
 	private XMPPService xmppService;
 	
 	@Override
@@ -25,6 +27,16 @@ public class XMPPTaskServlet extends HttpServlet {
 	}
 	
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		
+		log.info(String.format("Received POST Message: From: %s\n To: %s\n Body: %s\n", req.getParameter("from"),
+				req.getParameter("to"), req.getParameter("body")));
+		
+		String body = req.getParameter("body");
+		
+		if(body == null || body.equals("")){
+			body = "NO BODY";
+		}
+		
 		Message message = new MessageBuilder()
         .withMessageType(MessageType.CHAT)
         .withFromJid(new JID(req.getParameter("from")))
@@ -40,6 +52,10 @@ public class XMPPTaskServlet extends HttpServlet {
 	}
 	
 	public void processMessage(Message message, HttpServletResponse resp) throws IOException{
+		JID[] recipient = message.getRecipientJids();
+		log.info(String.format("Received POST Message: From: %s\n To: %s\n Body: %s\n Stanza: %s\n", message.getFromJid().toString(),
+					recipient.length > 0 ? recipient[0].toString() : "None", message.getBody(), message.getStanza() ));
+		
 		JID fromId = message.getFromJid();
 		Presence presence = xmppService.getPresence(fromId);
 		String presenceString = presence.isAvailable() ? "" : "not";

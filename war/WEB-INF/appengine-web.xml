@@ -10,7 +10,8 @@
 	
 	<inbound-services>
 		<service>xmpp_message</service>
-		<service>xmpp_presence</service>
-		<service>xmpp_subscribe</service>
+		<!--  no need for presence/subscribe at this time -->
+		<!-->service>xmpp_presence</service>
+		<service>xmpp_subscribe</service-->
 	</inbound-services>
 </appengine-web-app>
