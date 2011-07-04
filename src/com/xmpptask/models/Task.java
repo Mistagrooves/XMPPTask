@@ -2,6 +2,15 @@ package com.xmpptask.models;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.PrimaryKey;
+
+import com.google.appengine.api.datastore.Key;
 
 /**
  * 
@@ -12,15 +21,39 @@ import java.util.List;
  * @author Eric
  *
  */
+@PersistenceCapable(identityType=IdentityType.APPLICATION)
 public class Task {
 
+	@PrimaryKey
+	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+	private Key key;
+	
+	@Persistent
 	private String id;
+	
+	@Persistent
 	private String taskText;
-	private List<String> tags;
-	private String parentId;
+	
+	@Persistent
+	private Set<String> tags;
+	
+	@Persistent
+	private Set<Task> children;
+	
+	@Persistent
+	private Key parentKey;
+	
+	@Persistent
+	private User user;
+	
+	@Persistent
 	private Date dueOn;
+	
+	@Persistent
 	private int priority;
-	private List<String> prerequisites;
+	
+	@Persistent
+	private Set<String> prerequisites;
 	
 	public String getId() {
 		return id;
@@ -34,18 +67,21 @@ public class Task {
 	public void setTaskText(String taskText) {
 		this.taskText = taskText;
 	}
-	public List<String> getTags() {
+	public Set<String> getTags() {
 		return tags;
 	}
-	public void setContexts(List<String> tags) {
+	public void addTag(String tag){
+		this.tags.add(tag);
+	}
+	public void setContexts(Set<String> tags) {
 		this.tags = tags;
 	}
-	public String getParentId() {
+	/*public Task getParentId() {
 		return parentId;
 	}
-	public void setParentId(String parentId) {
+	public void setParentId(Task parentId) {
 		this.parentId = parentId;
-	}
+	}*/
 	public Date getDueOn() {
 		return dueOn;
 	}
@@ -58,10 +94,34 @@ public class Task {
 	public void setPriority(int priority) {
 		this.priority = priority;
 	}
-	public List<String> getPrerequisites() {
+	public Set<String> getPrerequisites() {
 		return prerequisites;
 	}
-	public void setPrerequisites(List<String> prerequisites) {
+	public void setPrerequisites(Set<String> prerequisites) {
 		this.prerequisites = prerequisites;
+	}
+	public void addPrereq(String prereq){
+		this.prerequisites.add(prereq);
+	}
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
+	public Set<Task> getChildren(){
+		return this.children;
+	}
+	public Key getParentKey() {
+		return parentKey;
+	}
+	public void setParentKey(Key parentKey) {
+		this.parentKey = parentKey;
+	}
+	public Key getKey() {
+		return key;
+	}
+	public void setKey(Key key) {
+		this.key = key;
 	}
 }

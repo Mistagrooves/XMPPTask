@@ -2,6 +2,10 @@ package com.xmpptask.commands;
 
 import java.util.ArrayList;
 
+import javax.jdo.PersistenceManager;
+
+import com.xmpptask.models.User;
+
 /**
  * 
  * Command that executes multiple sub commands
@@ -18,12 +22,12 @@ public class CompositeCommand extends Command {
 	}
 	
 	@Override
-	public CommandResult execute() {
+	public CommandResult execute(PersistenceManager pm) {
 		
 		CommandResult cr = new CommandResult("", ""); 
 		//aggregate all the results
 		for(Command c : commands){
-			cr.append(c.execute());
+			cr.append(c.execute(pm));
 		}
 		
 		return cr;
@@ -43,6 +47,13 @@ public class CompositeCommand extends Command {
 	
 	public java.util.List<Command> getCommands(){
 		return commands;
+	}
+	
+	@Override
+	public void withUser(User u){
+		for(Command c: commands){
+			c.withUser(u);
+		}
 	}
 
 }

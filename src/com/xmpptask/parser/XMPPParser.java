@@ -1,12 +1,14 @@
 package com.xmpptask.parser;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 import com.xmpptask.commands.Command;
 import com.xmpptask.commands.CommandBuilder;
+
 import com.xmpptask.models.Id;
 import com.xmpptask.models.Subject;
 import com.xmpptask.models.Tag;
@@ -18,18 +20,6 @@ public class XMPPParser {
 	private int index;
 	private String state;
 	private CommandBuilder parsed;
-	
-	public static void main(String[] args){
-		try{
-			XMPPParser parse = new XMPPParser("list");
-			Command cmd = parse.parse();
-			
-			XMPPParser parse1 = new XMPPParser("+ new task #tag #tag1");
-			Command cmd1 = parse1.parse();
-		}catch(ParseException e){
-			System.out.println("Error:" + e.getMessage());
-		}
-	}
 	
 	public XMPPParser(String task){
 		this.task = task;
@@ -103,8 +93,8 @@ public class XMPPParser {
 		//can be a/add/+
 		if(chunk.equalsIgnoreCase("a") || chunk.equals("+") || chunk.equalsIgnoreCase("add")){
 			//add a task to the global parent
-			parsed.add();
-			consumeTask();
+			parsed.add(consumeTask());
+
 		//can be l/list
 		}else if(chunk.equalsIgnoreCase("l") || chunk.equalsIgnoreCase("list")){
 			//perform the list command
@@ -128,11 +118,12 @@ public class XMPPParser {
 			throw new ParseException("Not implemented yet");
 		//if it starts with a list of ids or tags
 		}else if(look == '@'){
-			parsed.subject(consumeId());
-			parseTaskSubject();			
+			Id id = new Id(chunk.substring(1));
+			parsed.add(consumeTask(), id);
 			
 		//list all tasks in a particular tag
 		}else if(look == '#'){
+			Tag tag = new Tag(chunk.substring(1));
 			parsed.subject(consumeTag()).list();
 		}else{
 			throw new ParseException("Unknown Command");
@@ -150,14 +141,14 @@ public class XMPPParser {
 	
 	//parse an Id from the string
 	private Id consumeId(){
-		int spaceIndex = task.indexOf(' ');
+		int spaceIndex = task.indexOf(' ', index);
 		int origIndex = index;
 		index = spaceIndex == -1 ? task.length() : spaceIndex + 1;
 		return new Id(task.substring(origIndex, spaceIndex - 1));
 	}
 	
 	private Tag consumeTag(){
-		int spaceIndex = task.indexOf(' ');
+		int spaceIndex = task.indexOf(' ', index);
 		int origIndex = index;
 		index = spaceIndex == -1 ? task.length() : spaceIndex + 1;
 		return new Tag(task.substring(origIndex, spaceIndex - 1));
@@ -182,34 +173,36 @@ public class XMPPParser {
 		return ret;
 	}
 	
-	private void consumeTask(){
+	private Task consumeTask(){
+		Task ti = new Task();
 		String taskStr = task.substring(index);
 		//add a task using the rest of the string as the task
-		parsed.task(taskStr);
+		ti.setTaskText(taskStr);
 
 		Pattern tags = Pattern.compile("#([^ ]+)");
 		Matcher match = tags.matcher(taskStr);
 		while(match.find()){
-			parsed.tag(match.group());
+			ti.addTag(match.group());
 			match.region(match.end(), taskStr.length());
 		}
 		
 		Pattern prereq = Pattern.compile("@([^ ]+)");
 		match = prereq.matcher(taskStr);
 		while(match.find()){
-			parsed.prereq(match.group());
+			ti.addPrereq(match.group());
 			match.region(match.end(), taskStr.length());
 		}
 		
 		Pattern date = Pattern.compile("=([^ ]+)");
 		match = prereq.matcher(taskStr);
 		while(match.find()){
-			parsed.date(match.group());
+			ti.setDueOn(new Date()/*match.group()*/);
 			match.region(match.end(), taskStr.length());
 		}
 		
 		
 		index = task.length();
+		return ti;
 	}
 	
 }

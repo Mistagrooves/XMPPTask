@@ -6,6 +6,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.Provider;
 import java.security.SecureRandom;
 import java.security.Security;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -37,6 +39,9 @@ public class User {
 	
 	@Persistent
 	private String password;
+	
+	@Persistent(mappedBy = "user")
+	private List<Task> tasks;
 	
 	public User(String email, String firstname, String lastname){
 		this.email = email;
@@ -113,5 +118,14 @@ public class User {
 	public void setLastname(String lastname) {
 		this.lastname = lastname;
 	}
-	
+	public List<Task> getTasks() {
+		if(tasks == null)
+			return new ArrayList<Task>();
+		
+		return tasks;
+	}
+
+	public void setTasks(List<Task> tasks) {
+		this.tasks = tasks;
+	}
 }

@@ -82,31 +82,32 @@ public class XMPPTaskServlet extends HttpServlet {
 		query.setFilter("email == emailParam");
 		query.declareParameters("String emailParam");
 		boolean auth = false;
+		CommandResult result = null;
 		try{
 			List<User> results = (List<User>) query.execute(userid);
 			if(results.isEmpty()){
-				u = new User(userid, "", "");
-				u.setPassword("123456");
-				pm.makePersistent(u);
+				result = new CommandResult("Error: Unknown User", "<span style='color:red;'>Error:</span> Unknown User");
 			}else{
 				u = results.get(0);
 			}
+		
+			//process message
+			Command cmd = null;
+			if(u != null){
+				try{
+					XMPPParser parser = new XMPPParser(message.getBody());
+					cmd = parser.parse();
+					cmd.withUser(u);
+					//execute command
+					result = cmd.execute(pm);
+				}catch(ParseException e){
+					result = new CommandResult("Error " + e.getMessage(), "<span style='color:red;'>Error:</span> " + e.getMessage());
+				}
+			}
+			
 		}finally{
 			pm.close();
 		}
-		
-		//process message
-		Command cmd = null;
-		CommandResult result = null;
-		try{
-			XMPPParser parser = new XMPPParser(message.getBody());
-			cmd = parser.parse();
-			//execute command
-			result = cmd.execute();
-		}catch(ParseException e){
-			result = new CommandResult("Error " + e.getMessage(), "<span style='color:red;'>Error:</span> " + e.getMessage());
-		}
-		
 		//construct response
 		StringBuilder sb = new StringBuilder();
 		sb.append("<body>");
@@ -129,13 +130,6 @@ public class XMPPTaskServlet extends HttpServlet {
 			.build();
 		
 		SendResponse response = xmppService.sendMessage(msg);
-		
-	    /*for (Map.Entry<JID, SendResponse.Status> entry :
-	        response.getStatusMap().entrySet()) {
-	      resp.getWriter().println(entry.getKey() + "," + entry.getValue() + "<br>");
-	    }
-
-	    resp.getWriter().println("processed");*/
-		
+	
 	}
 }

@@ -3,6 +3,8 @@ package com.xmpptask.commands;
 import com.xmpptask.models.Id;
 import com.xmpptask.models.Subject;
 import com.xmpptask.models.Tag;
+import com.xmpptask.models.Task;
+import com.xmpptask.models.User;
 
 import net.sf.jsr107cache.*;
 
@@ -15,6 +17,10 @@ import net.sf.jsr107cache.*;
 public class CommandBuilder {
 	
 	private CompositeCommand commands;
+	
+	private Task parent;
+	
+	
 	
 	/** 
 	 * constructs a blank command builder
@@ -69,13 +75,25 @@ public class CommandBuilder {
 	public CommandBuilder subjects(java.util.List<Subject> subjects){
 		return this;
 	}
+	
+	public CommandBuilder withUser(User u){
+		for(Command c : this.commands.getCommands()){
+			c.withUser(u);
+		}
+		return this;
+	}
 	/**
 	 * add a task to the global scope
 	 * 
 	 * @return
 	 */
-	public CommandBuilder add(){
-		commands.add(new AddTask());
+	public CommandBuilder add(Task taskInfo){
+		commands.add(new AddTask(taskInfo));
+		return this;
+	}
+	
+	public CommandBuilder add(Task taskinfo, Id id){
+		commands.add(new AddChildTask(taskinfo, id));
 		return this;
 	}
 	
