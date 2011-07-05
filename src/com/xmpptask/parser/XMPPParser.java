@@ -105,8 +105,7 @@ public class XMPPParser {
 				.subjects(consumeMultiple());
 		//delete task
 		}else if(chunk.equals("-") || chunk.equalsIgnoreCase("d") || chunk.equalsIgnoreCase("delete")){
-			parsed.delete()
-				.subjects(consumeMultiple());
+			parsed.delete(consumeMultiple());
 		//increase priority
 		}else if(look == '>' || look == 'i'){
 			throw new ParseException("Not implemented yet");

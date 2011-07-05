@@ -150,7 +150,10 @@ public class CommandBuilder {
 	}
 	
 	//
-	public CommandBuilder delete(){
+	public CommandBuilder delete(java.util.List<Subject> subjects){
+		for(Subject s : subjects){
+			//commands.add(new Delete(s));
+		}
 		return this;
 	}
 

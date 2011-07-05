@@ -22,11 +22,14 @@ public class List extends Command {
 	
 	@Override
 	public CommandResult execute(PersistenceManager pm) {
-		
 		CommandResult cr = new CommandResult("", ""); 
 		java.util.List<Task> tasks = this.user.getTasks();
-		
-		return printList(tasks, cr, "");
+		if(tasks.isEmpty()){
+			cr.append("No tasks! Hurra", "No tasks! Hurra");
+			return cr;
+		}else{
+			return printList(tasks, cr, "");
+		}
 	}
 
 	

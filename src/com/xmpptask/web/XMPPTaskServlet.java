@@ -26,7 +26,6 @@ import com.xmpptask.parser.ParseException;
 import com.xmpptask.parser.XMPPParser;
 
 @SuppressWarnings("serial")
-//simple echo client for now
 public class XMPPTaskServlet extends HttpServlet {
 	
 	private static final Logger log = Logger.getLogger(XMPPTaskServlet.class.getName());

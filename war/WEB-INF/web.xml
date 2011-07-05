@@ -8,11 +8,19 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>XMPPTask</servlet-name>
 		<servlet-class>com.xmpptask.web.XMPPTaskServlet</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>User</servlet-name>
+		<servlet-class>com.xmpptask.web.UserServlet</servlet-class>
+	</servlet>
 	<servlet-mapping>
 		<servlet-name>XMPPTask</servlet-name>
 		<url-pattern>/_ah/xmpp/message/*</url-pattern>
 	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>User</servlet-name>
+		<url-pattern>/user/*</url-pattern>
+	</servlet-mapping>
 	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
 </web-app>
