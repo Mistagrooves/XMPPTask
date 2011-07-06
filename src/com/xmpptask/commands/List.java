@@ -9,7 +9,7 @@ public class List extends Command {
 	public CommandResult printList(Iterable<Task> tasks, CommandResult cr, String prepend){
 		int count = 1;
 		for(Task t : tasks){
-			String taskStr = String.format("%s%d. %s\n", prepend, count, t.getTaskText());
+			String taskStr = String.format("%s%d %s\n", prepend, count, t.getTaskText());
 			cr.append(taskStr, taskStr);
 			//iterate over the children
 			printList(t.getChildren(), cr, String.format("%s%d.", prepend, count));
