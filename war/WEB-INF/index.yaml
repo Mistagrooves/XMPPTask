@@ -1,0 +1,15 @@
+indexes:
+
+- kind: Task
+  ancestor: yes
+  properties:
+   - name: tasks_INTEGER_IDX
+     direction: asc
+	 
+- kind: Task
+  ancestor: no
+  properties:
+  - name: parentKey
+    direction: asc
+  - name: id
+    direction: desc
