@@ -24,7 +24,7 @@ public class CompositeCommand extends Command {
 	@Override
 	public CommandResult execute(PersistenceManager pm) {
 		
-		CommandResult cr = new CommandResult("", ""); 
+		CommandResult cr = new CommandResult(); 
 		//aggregate all the results
 		for(Command c : commands){
 			cr.append(c.execute(pm));

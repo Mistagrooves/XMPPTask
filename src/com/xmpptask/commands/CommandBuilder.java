@@ -118,7 +118,10 @@ public class CommandBuilder {
 		return this;
 	}
 	
-	public CommandBuilder complete(){
+	//just delete the commands for now
+	public CommandBuilder complete(IdsTags subjects){
+		commands.add(new IdDelete(subjects.getIds()));
+		commands.add(new TagDelete(subjects.getTags()));
 		return this;
 	}
 	

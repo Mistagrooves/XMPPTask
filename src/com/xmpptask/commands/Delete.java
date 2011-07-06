@@ -16,6 +16,6 @@ public class Delete extends Command {
 	}
 	
 	public CommandResult execute(PersistenceManager pm){
-		return new CommandResult("", "");
+		return new CommandResult();
 	}
 }

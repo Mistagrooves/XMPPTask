@@ -17,6 +17,7 @@ public class IdDelete extends Command {
 	public CommandResult execute(PersistenceManager pm) {
 	
 		
+		return new CommandResult();
 	
 	}
 

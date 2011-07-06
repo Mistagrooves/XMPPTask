@@ -53,6 +53,12 @@ public class Task {
 	private Date createdOn;
 	
 	@Persistent
+	private boolean completed;
+	
+	@Persistent
+	private Date completedOn;
+	
+	@Persistent
 	private int priority;
 	
 	@Persistent

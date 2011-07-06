@@ -38,6 +38,6 @@ public class AddTask extends Command {
 		pm.makePersistent(this.task);
 		this.user.getTasks().add(this.task);
 		
-		return new CommandResult(String.format("Success: Added new task @%s", this.task.getId()), String.format("<span style='color:green'>Success</span>: Added new task as @%s", task.getId()));
+		return new CommandResult("AddTask.success", this.task.getId());
 	}
 }

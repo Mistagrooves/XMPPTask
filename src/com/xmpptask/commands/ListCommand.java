@@ -19,7 +19,7 @@ public class ListCommand extends Command {
 	
 	@Override
 	public CommandResult execute(PersistenceManager pm) {
-		CommandResult cr = new CommandResult("", ""); 
+		CommandResult cr = new CommandResult(); 
 		java.util.List<Task> tasks = this.user.getTasks();
 		if(tasks.isEmpty()){
 			cr.append("No tasks! Hurra", "No tasks! Hurra");
