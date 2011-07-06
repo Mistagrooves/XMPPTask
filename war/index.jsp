@@ -7,6 +7,7 @@
 <title>Register to record your tasks</title>
 </head>
 <body>
+	<h1>Register for XMPP Task</h1>
 	<form action="/user/" method="POST">
 		XMPP Email Address: <input name="email" type="text"/><br/>
 		Password: <input name="password" type="password"/><br/>
