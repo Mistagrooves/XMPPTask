@@ -10,6 +10,7 @@ import com.xmpptask.commands.Command;
 import com.xmpptask.commands.CommandBuilder;
 
 import com.xmpptask.models.Id;
+import com.xmpptask.models.IdsTags;
 import com.xmpptask.models.Subject;
 import com.xmpptask.models.Tag;
 import com.xmpptask.models.Task;
@@ -101,8 +102,7 @@ public class XMPPParser {
 			parsed.list();
 		//complete tasks
 		}else if(chunk.equals("!")){
-			parsed.complete()
-				.subjects(consumeMultiple());
+			parsed.complete(consumeMultiple());
 		//delete task
 		}else if(chunk.equals("-") || chunk.equalsIgnoreCase("d") || chunk.equalsIgnoreCase("delete")){
 			parsed.delete(consumeMultiple());
@@ -153,16 +153,16 @@ public class XMPPParser {
 		return new Tag(task.substring(origIndex, spaceIndex - 1));
 	}
 	
-	private java.util.List<Subject> consumeMultiple(){
+	private IdsTags consumeMultiple(){
 		boolean hasNext = true;
-		ArrayList<Subject> ret = new ArrayList();
+		IdsTags ret = new IdsTags();
 		while(hasNext){
 			int spaceIndex = task.indexOf(" ");
 			
 			if(task.charAt(index) == '@'){
-				ret.add(new Id(task.substring(index + 1, spaceIndex)));
+				ret.addId(new Id(task.substring(index + 1, spaceIndex)));
 			}else{
-				ret.add(new Tag(task.substring(index + 1, spaceIndex)));
+				ret.addTag(new Tag(task.substring(index + 1, spaceIndex)));
 			}
 			
 			index = spaceIndex + 1;

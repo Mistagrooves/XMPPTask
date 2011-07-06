@@ -1,6 +1,7 @@
 package com.xmpptask.commands;
 
 import com.xmpptask.models.Id;
+import com.xmpptask.models.IdsTags;
 import com.xmpptask.models.Subject;
 import com.xmpptask.models.Tag;
 import com.xmpptask.models.Task;
@@ -52,7 +53,7 @@ public class CommandBuilder {
 	
 	public CommandBuilder list(){
 		
-		commands.add(new List());
+		commands.add(new ListCommand());
 		return this;
 	}
 	
@@ -150,10 +151,9 @@ public class CommandBuilder {
 	}
 	
 	//
-	public CommandBuilder delete(java.util.List<Subject> subjects){
-		for(Subject s : subjects){
-			//commands.add(new Delete(s));
-		}
+	public CommandBuilder delete(IdsTags subjects){
+		commands.add(new IdDelete(subjects.getIds()));
+		commands.add(new TagDelete(subjects.getTags()));
 		return this;
 	}
 

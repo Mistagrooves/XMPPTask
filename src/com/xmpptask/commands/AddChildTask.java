@@ -45,14 +45,15 @@ public class AddChildTask extends Command {
 				String[] ids = childrenResult.get(0).getId().split("\\.");
 				ids[ids.length - 1] = String.valueOf((Integer.parseInt(ids[ids.length - 1]) + 1)); 
 				task.setId(StringUtils.join(ids, '.'));
-				task.setParentKey(parent.getKey());
 			}
+			
+			task.setParentKey(parent.getKey());
 		}
 		
 		//TODO need to retrieve id and increment and assign
 		pm.makePersistent(this.task);
 		this.user.getTasks().add(this.task);
 		
-		return new CommandResult(String.format("Success: Added new task"), String.format("<span style='color:green'>Success</span>: Added new task as @%s", task.getId()));
+		return new CommandResult(String.format("Success: Added new task as %s", this.task.getId()), String.format("<span style='color:green'>Success</span>: Added new task as @%s", task.getId()));
 	}
 }

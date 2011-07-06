@@ -50,6 +50,9 @@ public class Task {
 	private Date dueOn;
 	
 	@Persistent
+	private Date createdOn;
+	
+	@Persistent
 	private int priority;
 	
 	@Persistent

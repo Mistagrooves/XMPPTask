@@ -4,17 +4,14 @@ import javax.jdo.PersistenceManager;
 
 import com.xmpptask.models.Task;
 
-public class List extends Command {
+public class ListCommand extends Command {
 
-	public CommandResult printList(Iterable<Task> tasks, CommandResult cr, String prepend){
-		int count = 1;
+	public CommandResult printList(Iterable<Task> tasks, CommandResult cr){
 		for(Task t : tasks){
-			String taskStr = String.format("%s%d %s\n", prepend, count, t.getTaskText());
+			String taskStr = String.format("%s %s\n", t.getId(), t.getTaskText());
 			cr.append(taskStr, taskStr);
 			//iterate over the children
-			printList(t.getChildren(), cr, String.format("%s%d.", prepend, count));
-			
-			count++;
+			printList(t.getChildren(), cr);
 		}
 		
 		return cr;
@@ -28,7 +25,7 @@ public class List extends Command {
 			cr.append("No tasks! Hurra", "No tasks! Hurra");
 			return cr;
 		}else{
-			return printList(tasks, cr, "");
+			return printList(tasks, cr);
 		}
 	}
 
