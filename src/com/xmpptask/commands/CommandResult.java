@@ -29,7 +29,7 @@ public class CommandResult {
 	}
 	
 	public void append(String resourceId){
-		
+		this.append(resources.getString(resourceId), resources.getString(resourceId + ".html"));
 	}
 	
 	public void append(String plaintext, String html){

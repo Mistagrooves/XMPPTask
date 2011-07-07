@@ -42,21 +42,19 @@ public class AddChildTask extends Command {
 			java.util.List<Task> childrenResult = (java.util.List<Task>)q2.execute(parent.getKey());
 			
 			if(childrenResult.isEmpty()){
-				task.setId(parent.getId() + ".1");
+				task.setId(parent.getId().getFirstChildId());
 			}else{
-				String[] ids = childrenResult.get(0).getId().split("\\.");
-				ids[ids.length - 1] = String.valueOf((Integer.parseInt(ids[ids.length - 1]) + 1)); 
-				task.setId(StringUtils.join(ids, '.'));
+				//get the first child (which has the highest id due to ordering)
+				task.setId(Id.incrementId(childrenResult.get(0).getId()));
 			}
 			
 			task.setParentKey(parent.getKey());
 		}
 		
-		//TODO need to retrieve id and increment and assign
 		pm.makePersistent(this.task);
 		this.user.getTasks().add(this.task);
 		
-		return new CommandResult("AddChildTask.success", this.task.getId());
+		return new CommandResult("AddChildTask.success", this.task.getId().toString());
 		
 		
 	}

@@ -15,10 +15,8 @@ public class IdDelete extends Command {
 	}
 	@Override
 	public CommandResult execute(PersistenceManager pm) {
-	
 		
 		return new CommandResult();
-	
 	}
 
 }

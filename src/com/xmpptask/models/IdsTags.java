@@ -3,6 +3,12 @@ package com.xmpptask.models;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Utility class for storing both Ids and Tags when parsing.
+ * 
+ * @author Eric
+ *
+ */
 public class IdsTags {
 
 	private List<Id> ids;

@@ -11,21 +11,24 @@ import com.xmpptask.commands.CommandBuilder;
 
 import com.xmpptask.models.Id;
 import com.xmpptask.models.IdsTags;
-import com.xmpptask.models.Subject;
 import com.xmpptask.models.Tag;
 import com.xmpptask.models.Task;
 
+/**
+ * Classes parses a particular formatted string into commands to perform on the task store
+ *  
+ * @author Eric
+ *
+ */
 public class XMPPParser {
 
 	private String task;
 	private int index;
-	private String state;
 	private CommandBuilder parsed;
 	
 	public XMPPParser(String task){
 		this.task = task;
 		this.index = 0;
-		this.state = "Init";
 		this.parsed = new CommandBuilder();
 	}
 	
@@ -107,6 +110,8 @@ public class XMPPParser {
 		}else if(chunk.equals("-") || chunk.equalsIgnoreCase("d") || chunk.equalsIgnoreCase("delete")){
 			parsed.delete(consumeMultiple());
 		//increase priority
+		}else if (chunk.equalsIgnoreCase("help") || chunk.equalsIgnoreCase("h")){
+			parsed.help();
 		}else if(look == '>' || look == 'i'){
 			throw new ParseException("Not implemented yet");
 		//reduce priority
@@ -123,7 +128,7 @@ public class XMPPParser {
 		//list all tasks in a particular tag
 		}else if(look == '#'){
 			Tag tag = new Tag(chunk.substring(1));
-			parsed.subject(consumeTag()).list();
+			parsed.list(tag);
 		}else{
 			throw new ParseException("Unknown Command");
 		}

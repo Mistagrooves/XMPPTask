@@ -2,7 +2,7 @@ package com.xmpptask.commands;
 
 import javax.jdo.PersistenceManager;
 
-public class Help extends Command {
+public class HelpCommand extends Command {
 
 	@Override
 	public CommandResult execute(PersistenceManager pm) {

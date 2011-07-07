@@ -2,7 +2,6 @@ package com.xmpptask.commands;
 
 import com.xmpptask.models.Id;
 import com.xmpptask.models.IdsTags;
-import com.xmpptask.models.Subject;
 import com.xmpptask.models.Tag;
 import com.xmpptask.models.Task;
 import com.xmpptask.models.User;
@@ -11,7 +10,7 @@ import net.sf.jsr107cache.*;
 
 /**
  * Task to build a command out of discrete steps. Meant to be almost a DSL.
- * 
+ * May be re-factored at a later date, the builder pattern didn't work as well as I thought it would
  * @author Eric
  *
  */
@@ -51,38 +50,32 @@ public class CommandBuilder {
 		return commands;
 	}
 	
+	/**
+	 * Adds the list command to the builder
+	 * @return
+	 */
 	public CommandBuilder list(){
 		
 		commands.add(new ListCommand());
 		return this;
 	}
 	
-	public CommandBuilder subject(Id task){
+	public CommandBuilder list(Tag tag){
+		commands.add(new ListCommand(tag));
 		return this;
 	}
 	
-	public CommandBuilder subject(Tag tag){
+	/**
+	 * Adds the help command to the builder
+	 * 
+	 * @return
+	 */
+	public CommandBuilder help(){
+		commands.add(new HelpCommand());
 		return this;
 	}
 	
-	public CommandBuilder subjects(Id[] ids){
-		return this;
-	}
 	
-	public CommandBuilder subjects(Tag[] tags){
-		return this;
-	}
-	
-	public CommandBuilder subjects(java.util.List<Subject> subjects){
-		return this;
-	}
-	
-	public CommandBuilder withUser(User u){
-		for(Command c : this.commands.getCommands()){
-			c.withUser(u);
-		}
-		return this;
-	}
 	/**
 	 * add a task to the global scope
 	 * 
@@ -93,67 +86,35 @@ public class CommandBuilder {
 		return this;
 	}
 	
+	/**
+	 * add a task to already existing task
+	 * @param taskinfo - the task info to save
+	 * @param id - the id of the parent
+	 * @return
+	 */
 	public CommandBuilder add(Task taskinfo, Id id){
 		commands.add(new AddChildTask(taskinfo, id));
 		return this;
 	}
 	
 	/**
-	 * adds the current task to a parent based on id
-	 * 
-	 * @param id
+	 * marks the task as complete
+	 * currently just deletes the tasks
+	 * TODO: implement proper completion
+	 * @param subjects - the ids/tags to operate on
 	 * @return
 	 */
-	public CommandBuilder addTo(Id id){
-		return this;
-	}
-	
-	/**
-	 * finds a task via Id and is the subject of this command
-	 * 
-	 * @param id
-	 * @return
-	 */
-	public CommandBuilder task(Id id){
-		return this;
-	}
-	
-	//just delete the commands for now
 	public CommandBuilder complete(IdsTags subjects){
 		commands.add(new IdDelete(subjects.getIds()));
 		commands.add(new TagDelete(subjects.getTags()));
 		return this;
 	}
 	
-	public CommandBuilder tag(String tag){
-		return this;
-	}
-	
-	public CommandBuilder prereq(String prereq){
-		return this;
-	}
-	
-	public CommandBuilder date(String date){
-		return this;
-	}
 	/**
-	 * constructs a task via the task string
-	 * 
-	 * @param task
+	 * Deletes the task, can be a sub-task
+	 * @param subjects - ids/tags to operate on
 	 * @return
 	 */
-	public CommandBuilder task(String task){
-		return this;
-	}
-	
-	/**
-	*the subject of this command is now all of these tasks
-	*/
-	public CommandBuilder tasks(java.util.List<Id> ids){
-		return this;
-	}
-	
-	//
 	public CommandBuilder delete(IdsTags subjects){
 		commands.add(new IdDelete(subjects.getIds()));
 		commands.add(new TagDelete(subjects.getTags()));

@@ -2,6 +2,7 @@ package com.xmpptask.commands;
 
 import javax.jdo.PersistenceManager;
 
+import com.xmpptask.models.Id;
 import com.xmpptask.models.PMF;
 import com.xmpptask.models.Task;
 import javax.jdo.Query;
@@ -28,16 +29,14 @@ public class AddTask extends Command {
 		
 		java.util.List<Task> results = (java.util.List<Task>)q.execute();
 		if(results.isEmpty())
-			this.task.setId("1");
+			this.task.setId(new Id("1"));
 		else{
-			String[] ids = results.get(0).getId().split("\\.");
-			ids[ids.length - 1] = String.valueOf((Integer.parseInt(ids[ids.length - 1]) + 1)); 
-			task.setId(StringUtils.join(ids, '.'));
+			task.setId(Id.incrementId(results.get(0).getId()));
 		}
 		
 		pm.makePersistent(this.task);
 		this.user.getTasks().add(this.task);
 		
-		return new CommandResult("AddTask.success", this.task.getId());
+		return new CommandResult("AddTask.success", this.task.getId().toString());
 	}
 }

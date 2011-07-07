@@ -29,7 +29,7 @@ public class Task {
 	private Key key;
 	
 	@Persistent
-	private String id;
+	private Id id;
 	
 	@Persistent
 	private String taskText;
@@ -64,11 +64,29 @@ public class Task {
 	@Persistent
 	private Set<String> prerequisites;
 	
-	public String getId() {
+	public Id getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(Id id) {
 		this.id = id;
+	}
+	public Date getCreatedOn() {
+		return createdOn;
+	}
+	public void setCreatedOn(Date createdOn) {
+		this.createdOn = createdOn;
+	}
+	public boolean isCompleted() {
+		return completed;
+	}
+	public void setCompleted(boolean completed) {
+		this.completed = completed;
+	}
+	public Date getCompletedOn() {
+		return completedOn;
+	}
+	public void setCompletedOn(Date completedOn) {
+		this.completedOn = completedOn;
 	}
 	public String getTaskText() {
 		return taskText;

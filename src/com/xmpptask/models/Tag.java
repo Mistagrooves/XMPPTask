@@ -1,6 +1,13 @@
 package com.xmpptask.models;
 
-public class Tag extends Subject {
+/**
+ * Represents a tag string that tasks can be tagged with to categorize
+ * Takes the form: #<string>
+ * 
+ * @author Eric
+ *
+ */
+public class Tag {
 
 	private String tag;
 	
