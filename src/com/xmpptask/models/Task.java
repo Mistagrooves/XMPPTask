@@ -1,6 +1,7 @@
 package com.xmpptask.models;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -64,6 +65,11 @@ public class Task {
 	@Persistent
 	private Set<String> prerequisites;
 	
+	public Task(){
+		tags = new HashSet<String>();
+		prerequisites = new HashSet<String>();
+		children = new HashSet<Task>();
+	}
 	public Id getId() {
 		return id;
 	}

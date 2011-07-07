@@ -10,6 +10,12 @@ public class IdDelete extends Command {
 
 	private List<Id> ids;
 	
+	public List<Id> getIds() {
+		return ids;
+	}
+	public void setIds(List<Id> ids) {
+		this.ids = ids;
+	}
 	public IdDelete(List<Id> ids){
 		this.ids = ids;
 	}

@@ -16,6 +16,14 @@ public class AddTask extends Command {
 	 */
 	private Task task;
 
+	public Task getTask() {
+		return task;
+	}
+
+	public void setTask(Task task) {
+		this.task = task;
+	}
+
 	public AddTask(Task task){
 		this.task = task;
 	}

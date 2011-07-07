@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
+
 
 import com.xmpptask.commands.Command;
 import com.xmpptask.commands.CommandBuilder;
@@ -26,39 +28,50 @@ public class XMPPParser {
 	private int index;
 	private CommandBuilder parsed;
 	
-	public XMPPParser(String task){
+	private void init(String task){
 		this.task = task;
 		this.index = 0;
 		this.parsed = new CommandBuilder();
+	}
+	
+	public XMPPParser(String task){
+		init(task); 
 	}
 	
 	public XMPPParser(){
-		this.task = "";
-		this.index = 0;
-		this.parsed = new CommandBuilder();
-	}
-	
-	public void setTask(String task){
-		this.task = task;
+		init(null);
 	}
 	
 	/**
+	 * sets the task string to parse
+	 * @param task
+	 */
+	public void setParseString(String task){
+		init(task);
+	}
+	
+	/**
+	 * performing the parsing
 	 * 
 	 * @param task
 	 * @return
 	 */
 	public Command parse() throws ParseException{
 		
-		if(task.isEmpty()){
+		//if the string is empty return the list of tasks
+		if(StringUtils.isBlank(this.task)){
 			return parsed.list().build();
 		}
-		
+		//proceed to the first parsing step
 		parseStepOne();
-		
+		//return the command built from all the steps
 		return parsed.build();
 	}
 
-	
+	/**
+	 * parse out the subject of an @ command
+	 * @throws ParseException
+	 */
 	private void parseTaskSubject() throws ParseException{
 		char look = Character.toLowerCase(task.charAt(index));
 
@@ -74,6 +87,13 @@ public class XMPPParser {
 		}
 	}
 	
+	/*
+	 * Gets the next parsing token
+	 * Increments the internal pointer to the character after the space
+	 * 
+	 * @return the text between the current pointer and the next space character
+	 * 
+	 */
 	private String getToken(){
 		int spaceIndex = task.indexOf(' ');
 
@@ -139,6 +159,10 @@ public class XMPPParser {
 		
 	}
 	
+	/**
+	 * gets the length remaining in the parsed string
+	 * @return
+	 */
 	private int lengthRemaining(){
 		return task.length() - index;
 	}
@@ -162,16 +186,17 @@ public class XMPPParser {
 		boolean hasNext = true;
 		IdsTags ret = new IdsTags();
 		while(hasNext){
-			int spaceIndex = task.indexOf(" ");
+			int spaceIndex = task.indexOf(" ", index);
+			int endindex = spaceIndex == -1 ? task.length() : spaceIndex;
 			
 			if(task.charAt(index) == '@'){
-				ret.addId(new Id(task.substring(index + 1, spaceIndex)));
+				ret.addId(new Id(task.substring(index + 1, endindex)));
 			}else{
-				ret.addTag(new Tag(task.substring(index + 1, spaceIndex)));
+				ret.addTag(new Tag(task.substring(index + 1, endindex)));
 			}
 			
-			index = spaceIndex + 1;
-			hasNext = lengthRemaining() >= 1 && (task.charAt(index + 1) == '@' || task.charAt(index + 1) == '#'); 
+			index = spaceIndex == -1 ? task.length() : spaceIndex + 1;
+			hasNext = lengthRemaining() >= 1 && (task.charAt(index) == '@' || task.charAt(index) == '#'); 
 			
 		}
 		return ret;
@@ -186,14 +211,14 @@ public class XMPPParser {
 		Pattern tags = Pattern.compile("#([^ ]+)");
 		Matcher match = tags.matcher(taskStr);
 		while(match.find()){
-			ti.addTag(match.group());
+			ti.addTag(match.group(1));
 			match.region(match.end(), taskStr.length());
 		}
 		
 		Pattern prereq = Pattern.compile("@([^ ]+)");
 		match = prereq.matcher(taskStr);
 		while(match.find()){
-			ti.addPrereq(match.group());
+			ti.addPrereq(match.group(1));
 			match.region(match.end(), taskStr.length());
 		}
 		

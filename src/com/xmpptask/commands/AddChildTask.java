@@ -18,6 +18,22 @@ public class AddChildTask extends Command {
 	private Task task;
 	private Id id;
 
+	public Task getTask() {
+		return task;
+	}
+
+	public void setTask(Task task) {
+		this.task = task;
+	}
+
+	public Id getId() {
+		return id;
+	}
+
+	public void setId(Id id) {
+		this.id = id;
+	}
+
 	public AddChildTask(Task task, Id id){
 		this.task = task;
 		this.id = id;
