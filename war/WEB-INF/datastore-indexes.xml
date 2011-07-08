@@ -1,0 +1,16 @@
+<!-- Indices written at Wed, 6 Jul 2011 04:01:50 UTC -->
+
+<datastore-indexes autoGenerate="true">
+
+    <!-- Used 4 times in query history -->
+    <datastore-index kind="Task" ancestor="true" source="auto">
+        <property name="id" direction="asc"/>
+    </datastore-index>
+
+    <!-- Used 1 time in query history -->
+    <datastore-index kind="Task" ancestor="false" source="auto">
+        <property name="parentKey" direction="asc"/>
+        <property name="id" direction="desc"/>
+    </datastore-index>
+
+</datastore-indexes>

@@ -6,7 +6,7 @@ public class HelpCommand extends Command {
 
 	@Override
 	public CommandResult execute(PersistenceManager pm) {
-		return new CommandResult("HELP!", "HELP!");
+		return new CommandResult("HelpCommand.help");
 	}
 
 }

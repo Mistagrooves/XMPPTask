@@ -130,7 +130,7 @@ public class XMPPParser {
 		}else if(chunk.equals("-") || chunk.equalsIgnoreCase("d") || chunk.equalsIgnoreCase("delete")){
 			parsed.delete(consumeMultiple());
 		//increase priority
-		}else if (chunk.equalsIgnoreCase("help") || chunk.equalsIgnoreCase("h")){
+		}else if (chunk.equalsIgnoreCase("help") || chunk.equalsIgnoreCase("h") || chunk.equals("?")){
 			parsed.help();
 		}else if(look == '>' || look == 'i'){
 			throw new ParseException("Not implemented yet");

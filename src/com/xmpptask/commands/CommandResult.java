@@ -39,8 +39,12 @@ public class CommandResult {
 	}*/
 	
 	public void append(String resourceString, String... id){
-		this.plaintext.append("\n" + String.format(resources.getString(resourceString), id)); 
-		this.html.append("<br/>" + String.format(resources.getString(resourceString + ".html"), id));
+		
+		String newlinept = this.plaintext.length() == 0 ? "" : "\n";
+		String newlinehtml = this.plaintext.length() == 0 ? "" : "<br/>";
+		
+		this.plaintext.append(newlinept + String.format(resources.getString(resourceString), id)); 
+		this.html.append(newlinehtml + String.format(resources.getString(resourceString + ".html"), id));
 	}
 	
 	public String getPlainText(){
