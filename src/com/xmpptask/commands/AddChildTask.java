@@ -7,6 +7,8 @@ import javax.jdo.Query;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.users.User;
 import com.xmpptask.models.Id;
 import com.xmpptask.models.Task;
 
@@ -42,10 +44,10 @@ public class AddChildTask extends Command {
 	public CommandResult execute(PersistenceManager pm){
 				
 		Query q = pm.newQuery(Task.class);
-		q.setFilter("id == idparam");
-		q.declareParameters("String idparam");
+		q.setFilter("id == idparam && user == userparam");
+		q.declareParameters("String idparam, " + Key.class.getName() + " userparam");
 				
-		java.util.List<Task> result = (java.util.List<Task>)q.execute(this.id.toString()); 
+		java.util.List<Task> result = (java.util.List<Task>)q.execute(this.id.toString(), this.user.getKey()); 
 		if(result.isEmpty()){
 			
 		}else{
@@ -63,13 +65,11 @@ public class AddChildTask extends Command {
 				//get the first child (which has the highest id due to ordering)
 				task.setId(Id.incrementId(childrenResult.get(0).getId()));
 			}
-			
+			task.setUser(this.user.getKey());
 			task.setParentKey(parent.getKey());
 		}
 		
 		pm.makePersistent(this.task);
-		this.user.getTasks().add(this.task);
-		
 		return new CommandResult("AddChildTask.success", this.task.getId().toString());
 		
 		

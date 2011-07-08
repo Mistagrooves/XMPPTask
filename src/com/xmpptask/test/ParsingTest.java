@@ -139,6 +139,11 @@ public class ParsingTest {
 	}
 	
 	@Test(expected=ParseException.class)
+	public void testImproperMultiplesFormat() throws ParseException{
+		parser.setParseString("- 3");
+		CompositeCommand cmd = (CompositeCommand)parser.parse();
+	}
+	@Test(expected=ParseException.class)
 	public void testLargeParseString() throws ParseException{
 		parser.setParseString("help me");
 		CompositeCommand cmd = (CompositeCommand)parser.parse();

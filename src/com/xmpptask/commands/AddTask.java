@@ -42,8 +42,10 @@ public class AddTask extends Command {
 			task.setId(Id.incrementId(results.get(0).getId()));
 		}
 		
-		pm.makePersistent(this.task);
+		task.setUser(this.user.getKey());
 		this.user.getTasks().add(this.task);
+		pm.makePersistent(this.task);
+		
 		
 		return new CommandResult("AddTask.success", this.task.getId().toString());
 	}

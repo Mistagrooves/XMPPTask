@@ -85,7 +85,7 @@ public class XMPPTaskServlet extends HttpServlet {
 		try{
 			List<User> results = (List<User>) query.execute(userid);
 			if(results.isEmpty()){
-				result = new CommandResult("Error: Unknown User", "<span style='color:red;'>Error:</span> Unknown User");
+				result = new CommandResult("Error.unknownuser");
 			}else{
 				u = results.get(0);
 			}
@@ -100,7 +100,7 @@ public class XMPPTaskServlet extends HttpServlet {
 					//execute command
 					result = cmd.execute(pm);
 				}catch(ParseException e){
-					result = new CommandResult("Error " + e.getMessage(), "<span style='color:red;'>Error:</span> " + e.getMessage());
+					result = new CommandResult("Error.message", e.getMessage());
 				}
 			}
 			

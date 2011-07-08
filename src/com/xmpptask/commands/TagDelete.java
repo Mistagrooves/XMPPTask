@@ -25,7 +25,7 @@ public class TagDelete extends Command {
 	@Override
 	public CommandResult execute(PersistenceManager pm) {
 		// TODO Auto-generated method stub
-		return null;
+		return new CommandResult();
 	}
 
 }

@@ -19,22 +19,28 @@ public class CommandResult {
 				String.format(resources.getString(resourceString + ".html"), id));
 	}
 	
+	public CommandResult(String resourceString){
+		initialize(resources.getString(resourceString), 
+				resources.getString(resourceString + ".html"));
+	}
+	
 	public CommandResult(){
 		initialize("", "");
 	}
 	
 	public void append(CommandResult cr){
+		if(cr == null) return;
 		this.plaintext.append("\n" + cr.getPlainText());
 		this.html.append("<br/>" + cr.getHTML());
 	}
 	
-	public void append(String resourceId){
+	/*public void append(String resourceId){
 		this.append(resources.getString(resourceId), resources.getString(resourceId + ".html"));
-	}
+	}*/
 	
-	public void append(String plaintext, String html){
-		this.plaintext.append(plaintext);
-		this.html.append(html);
+	public void append(String resourceString, String... id){
+		this.plaintext.append("\n" + String.format(resources.getString(resourceString), id)); 
+		this.html.append("<br/>" + String.format(resources.getString(resourceString + ".html"), id));
 	}
 	
 	public String getPlainText(){
@@ -44,5 +50,6 @@ public class CommandResult {
 	public String getHTML(){
 		return this.html.toString();
 	}
-	
+
+
 }

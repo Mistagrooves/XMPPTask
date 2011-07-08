@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.jdo.annotations.*;
+
 import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable(identityType=IdentityType.APPLICATION)
@@ -40,7 +41,8 @@ public class User {
 	@Persistent
 	private String password;
 	
-	@Persistent(mappedBy = "user")
+	@Persistent
+	@Order(extensions = @Extension(vendorName="datanucleus", key="list-ordering", value="id asc"))
 	private List<Task> tasks;
 	
 	public User(String email, String firstname, String lastname){

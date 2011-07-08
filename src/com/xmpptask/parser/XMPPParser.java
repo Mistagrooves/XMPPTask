@@ -182,7 +182,7 @@ public class XMPPParser {
 		return new Tag(task.substring(origIndex, spaceIndex - 1));
 	}
 	
-	private IdsTags consumeMultiple(){
+	private IdsTags consumeMultiple() throws ParseException{
 		boolean hasNext = true;
 		IdsTags ret = new IdsTags();
 		while(hasNext){
@@ -191,8 +191,10 @@ public class XMPPParser {
 			
 			if(task.charAt(index) == '@'){
 				ret.addId(new Id(task.substring(index + 1, endindex)));
-			}else{
+			}else if(task.charAt(index) == '#'){
 				ret.addTag(new Tag(task.substring(index + 1, endindex)));
+			}else{
+				throw new ParseException("Couldn't consume ids or tags");
 			}
 			
 			index = spaceIndex == -1 ? task.length() : spaceIndex + 1;

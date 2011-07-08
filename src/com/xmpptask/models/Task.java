@@ -1,14 +1,19 @@
 package com.xmpptask.models;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.jdo.annotations.Element;
+import javax.jdo.annotations.Embedded;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Order;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.PrimaryKey;
 
 import com.google.appengine.api.datastore.Key;
@@ -30,6 +35,7 @@ public class Task {
 	private Key key;
 	
 	@Persistent
+	@Embedded
 	private Id id;
 	
 	@Persistent
@@ -39,13 +45,15 @@ public class Task {
 	private Set<String> tags;
 	
 	@Persistent
-	private Set<Task> children;
+	@Element(dependent = "true")
+	@Order(extensions = @Extension(vendorName="datanucleus", key="list-ordering", value="id asc"))
+	private List<Task> children;
 	
 	@Persistent
 	private Key parentKey;
 	
 	@Persistent
-	private User user;
+	private Key user;
 	
 	@Persistent
 	private Date dueOn;
@@ -68,12 +76,14 @@ public class Task {
 	public Task(){
 		tags = new HashSet<String>();
 		prerequisites = new HashSet<String>();
-		children = new HashSet<Task>();
+		children = new ArrayList<Task>();
 	}
 	public Id getId() {
 		return id;
 	}
 	public void setId(Id id) {
+		if(this.id == id)
+			return;
 		this.id = id;
 	}
 	public Date getCreatedOn() {
@@ -136,13 +146,13 @@ public class Task {
 	public void addPrereq(String prereq){
 		this.prerequisites.add(prereq);
 	}
-	public User getUser() {
+	public Key getUser() {
 		return user;
 	}
-	public void setUser(User user) {
+	public void setUser(Key user) {
 		this.user = user;
 	}
-	public Set<Task> getChildren(){
+	public List<Task> getChildren(){
 		return this.children;
 	}
 	public Key getParentKey() {
