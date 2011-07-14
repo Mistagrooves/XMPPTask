@@ -1,44 +1,47 @@
 A simple bot that will record tasks for you.
+
 Inspired by [todo.txt](http://todotxt.com/ "todo.txt")
+
 Syntax is unstable and subject to change at my whims.
 
 Currently supported commands (in short-bastardized EBNF)
 ========================================================
 1. Help
-	("h" | "help" | "?")
+	- ("h" | "help" | "?")
 2. List Tasks
-	("l" | "list")
+	- ("l" | "list")
 3. Add a task
-	("+" | "a" | "add") <task>
+	- ("+" | "a" | "add") <task>
 4. Add a sub-task
-	@<id> <task>
+	- @<id> <task>
 5. Delete a task
-	( "-" | "d" | "delete") @<id>
+	- ( "-" | "d" | "delete") @<id>
 6. task = all characters
-	Any text string, can be tagged with #<tag>
+	- Any text string, can be tagged with #<tag>
 7. id = "@" , 0-9[,{ .0-9 }]
-	Unique id for the task. 
+	- Unique id for the task. 
 8. tag = "#" , {all characters - space}
-	Tags for the task
+	- Tags for the task
 
 Future
 ======
-Search on tags
-	"#", {all characters}
-Completion:
-	( "c" | "complete" ) @id
-Increase Priority
-	( ">" ), <id>
-Decrease Priority
-	( "<" ), <id>
-Automatic Sub Tagging
-	#<tag>-<tag> becomes #<tag> and #<tag>-<tag>
-Due Date
-	<id> is due on <date>
-	+ <task> 
-Lists
-
-Multi-User/Collabrative Lists
+1. Search on tags
+	- "#", {all characters}
+2. Completion:
+	- ( "c" | "complete" ) @id
+3. Increase Priority
+	- ( ">" ), <id>
+4. Decrease Priority
+	- ( "<" ), <id>
+5. Automatic Sub Tagging
+	- #<tag>-<tag> becomes #<tag> and #<tag>-<tag>
+6. Due Date
+	- <id> is due on <date>
+	- + <task> 
+7. Lists
+	- ":", {all characters - space}
+	- tags work cross list
+8. Multi-User/Collabrative Lists
 	- Users of the same domain can access lists on the same domain, black list certain domains (ie. gmail)
 	- Teams of people can share a list
 		- eric@company.com:list1 + <task>
